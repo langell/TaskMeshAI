@@ -1,5 +1,6 @@
 ignoredBuiltDependencies:
   - '@coinbase/x402'
   - bufferutil
+  - esbuild
   - keccak
   - utf-8-validate
