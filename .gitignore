@@ -1,0 +1,143 @@
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Next.js
+/.next/
+/out/
+.next
+dist
+
+# Production
+/build
+
+# Misc
+*.pem
+.DS_Store
+*.pem
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+lerna-debug.log*
+
+# Local env files
+.env*.local
+
+# Vercel
+.vercel
+
+# IDE & Editor
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.vscode/
+.idea/
+*.iml
+.DS_Store
+
+# OS
+Thumbs.db
+.DS_Store
+.AppleDouble
+.LSOverride
+*.swp
+*.swo
+*~
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Package manager
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Prisma
+prisma/migrations/
+prisma/*.db
+prisma/*.sqlite
+
+# Cache
+.cache/
+.eslintcache
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# IDE specific
+.code-workspace
+jsconfig.json.local
+
+# Build artifacts
+dist/
+build/
+*.tsbuildinfo
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Hot reloading
+.hot-update.js
+.hot-update.json
+
+# Sentry (if using)
+.sentryclirc
+
+# Credentials & Secrets (NEVER commit these)
+*.key
+*.pem
+*.ppk
+.aws/
+.gcloud/
+credentials.json
+service-account.json
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Local development
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# pnpm specific
+pnpm-workspace.yaml.local
+
+# Misc build files
+.turbo/
+tsconfig.tsbuildinfo
