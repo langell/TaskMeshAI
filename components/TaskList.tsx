@@ -19,14 +19,28 @@ const statusIcons: Record<string, React.ComponentType<any>> = {
 
 export default function TaskList() {
   const [tasks, setTasks] = useState<any[]>([]);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     supabase.from('tasks').select('*').order('created_at', { ascending: false }).then(({ data }) => setTasks(data || []));
     const channel = supabase.channel('tasks').on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, () => {
       supabase.from('tasks').select('*').then(({ data }) => setTasks(data || []));
     }).subscribe();
     return () => { supabase.removeChannel(channel); };
   }, []);
+
+  if (!mounted) {
+    return (
+      <div className="bg-card p-6 rounded-lg">
+        <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+          <Clipboard className="w-5 h-5" />
+          Open Tasks
+        </h2>
+        <p className="text-muted">Loading tasks...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-card p-6 rounded-lg">

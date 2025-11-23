@@ -1,6 +1,6 @@
 'use client';
 import { supabase } from '@/lib/supabase';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { injected } from 'wagmi/connectors';
 import { useWriteContract, useSwitchChain } from 'wagmi';
@@ -23,17 +23,34 @@ const USDC_ABI = [
 ] as const;
 
 export default function PostTask() {
+  const [mounted, setMounted] = useState(false);
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [bounty, setBounty] = useState('0.30');
   const [loading, setLoading] = useState(false);
   const [paymentTx, setPaymentTx] = useState<string | null>(null);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const { address, isConnected, chainId } = useAccount();
   const { connect } = useConnect();
   const { disconnect } = useDisconnect();
   const { switchChain } = useSwitchChain();
   const { writeContract } = useWriteContract();
+
+  if (!mounted) {
+    return (
+      <div className="bg-card p-6 rounded-lg">
+        <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+          <FileText className="w-5 h-5" />
+          Post a New Task
+        </h2>
+        <p className="text-muted">Loading...</p>
+      </div>
+    );
+  }
 
   const post = async () => {
     if (!isConnected || !address) {
