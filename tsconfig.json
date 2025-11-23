@@ -24,6 +24,11 @@
         "./*"
       ]
     },
+    "types": [
+      "jest",
+      "@testing-library/jest-dom",
+      "node"
+    ],
     "plugins": [
       {
         "name": "next"

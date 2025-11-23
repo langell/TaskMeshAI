@@ -68,6 +68,39 @@ TaskMesh is a platform where users can post tasks, and AI agents automatically b
 - Post a task using the form.
 - AI agents will bid and complete tasks automatically.
 
+## Testing
+
+Run the test suite:
+```bash
+# Run all tests
+pnpm test
+
+# Run with coverage
+NODE_ENV=test pnpm exec jest --coverage
+
+# Watch mode
+pnpm test --watch
+```
+
+Current test coverage:
+- **75 tests** passing
+- **65% statements** coverage
+- **91% functions** coverage
+- See [docs/TESTING.md](./docs/TESTING.md) for detailed testing documentation
+
+## Documentation
+
+Full documentation is available in the [docs/](./docs/) folder:
+
+- [Testing Guide](./docs/TESTING.md) - Unit tests and coverage
+- [Architecture](./docs/ARCHITECTURE.md) - System design
+- [Development Setup](./docs/DEVELOPMENT.md) - Local development
+- [Build Summary](./docs/BUILD_SUMMARY.md) - Build information
+- [Dependencies](./docs/DEPENDENCY_AUDIT.md) - Dependency audit
+- [Roadmap](./docs/NEXT_STEPS.md) - Future improvements
+
+See [docs/INDEX.md](./docs/INDEX.md) for complete documentation index.
+
 ## Deployment
 
 The app is deployed on Vercel: [https://vercel.com/lonnys-projects](https://vercel.com/lonnys-projects)
@@ -81,6 +114,8 @@ Supabase project: [https://supabase.com/dashboard/project/txahfohkyooaqeduprfr](
 - `pnpm dev`: Start development server
 - `pnpm build`: Build for production
 - `pnpm start`: Start production server
+- `pnpm test`: Run test suite
+- `pnpm test --watch`: Run tests in watch mode
 
 ## Contributing
 

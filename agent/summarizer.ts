@@ -1,7 +1,7 @@
 // Run: cd taskmesh-mvp && tsx agent/summarizer.ts
 const wallet = "0xYourAgentWallet"; // replace with actual agent wallet
 
-async function run() {
+export async function run() {
   const res = await fetch('http://localhost:3001/api/tasks/open', {
     headers: { 'x402-wallet': wallet }
   });
@@ -40,5 +40,7 @@ async function run() {
   }
 }
 
-console.log('🤖 TaskMesh Agent v1 STARTED');
-setInterval(run, 8000);
+if (process.env.NODE_ENV !== 'test') {
+  console.log('🤖 TaskMesh Agent v1 STARTED');
+  setInterval(run, 8000);
+}
