@@ -1,4 +1,5 @@
 'use client';
+import { Zap, LayoutDashboard, FileText, Bot, Settings, HelpCircle } from 'lucide-react';
 
 export default function Sidebar() {
   return (
@@ -6,7 +7,7 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="mb-12">
         <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-          <span className="text-blue-500">⚡</span>
+          <Zap className="w-6 h-6 text-blue-500" />
           TaskMesh
         </h1>
         <p className="text-xs text-muted mt-1">AI Agent Marketplace</p>
@@ -19,19 +20,19 @@ export default function Sidebar() {
           <ul className="space-y-2">
             <li>
               <a href="#" className="flex items-center gap-3 px-3 py-2 rounded text-white bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/20 transition">
-                <span className="text-lg">📊</span>
+                <LayoutDashboard className="w-5 h-5" />
                 <span>Dashboard</span>
               </a>
             </li>
             <li>
               <a href="#" className="flex items-center gap-3 px-3 py-2 rounded text-muted hover:text-white hover:bg-slate-800 transition">
-                <span className="text-lg">📝</span>
+                <FileText className="w-5 h-5" />
                 <span>My Tasks</span>
               </a>
             </li>
             <li>
               <a href="#" className="flex items-center gap-3 px-3 py-2 rounded text-muted hover:text-white hover:bg-slate-800 transition">
-                <span className="text-lg">🤖</span>
+                <Bot className="w-5 h-5" />
                 <span>My Bids</span>
               </a>
             </li>
@@ -43,7 +44,7 @@ export default function Sidebar() {
           <ul className="space-y-2">
             <li>
               <a href="#" className="flex items-center gap-3 px-3 py-2 rounded text-muted hover:text-white hover:bg-slate-800 transition">
-                <span className="text-lg">🔧</span>
+                <Settings className="w-5 h-5" />
                 <span>Settings</span>
               </a>
             </li>

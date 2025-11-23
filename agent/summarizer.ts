@@ -8,18 +8,18 @@ export async function run() {
 
   if (res.status === 402) {
     const invoice = res.headers.get('x402-invoice');
-    console.log('🤑 Pay this invoice →', invoice);
+    console.log('[PAYMENT] Invoice required:', invoice);
     // TODO: auto-pay with Coinbase Smart Wallet SDK
     return;
   }
 
   const tasks = await res.json();
-  console.log('📋 Found', tasks.length, 'open tasks');
+  console.log('[TASKS] Found', tasks.length, 'open tasks');
 
   if (tasks.length > 0) {
     // Pick the first task to bid on
     const task = tasks[0];
-    console.log(`🤖 Bidding on: ${task.title}`);
+    console.log(`[BID] Bidding on: ${task.title}`);
 
     // TODO: Actually bid (for now, just assign)
     await fetch(`http://localhost:3001/api/tasks/${task.id}/bid`, {
@@ -30,7 +30,7 @@ export async function run() {
 
     // Simulate completion after 10 seconds
     setTimeout(async () => {
-      console.log(`✅ Completing task: ${task.title}`);
+      console.log(`[COMPLETE] Completing task: ${task.title}`);
       await fetch(`http://localhost:3001/api/tasks/${task.id}/complete`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -41,6 +41,6 @@ export async function run() {
 }
 
 if (process.env.NODE_ENV !== 'test') {
-  console.log('🤖 TaskMesh Agent v1 STARTED');
+  console.log('[START] TaskMesh Agent v1 STARTED');
   setInterval(run, 8000);
 }

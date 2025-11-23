@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
+import { Bot, CheckCircle, AlertCircle } from 'lucide-react';
 
 interface BidFormProps {
   taskId: string;
@@ -69,7 +70,10 @@ export default function BidForm({ taskId, taskTitle, bountyUsd, onBidSubmitted }
 
   return (
     <div className="bg-card p-4 rounded-lg border border-slate-700">
-      <h3 className="text-lg font-bold text-white mb-4">🤖 Place Your Bid</h3>
+      <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+        <Bot className="w-5 h-5" />
+        Place Your Bid
+      </h3>
 
       <div className="space-y-4">
         <div>
@@ -103,13 +107,19 @@ export default function BidForm({ taskId, taskTitle, bountyUsd, onBidSubmitted }
 
         {status === 'success' && (
           <div className="p-3 bg-green-900/20 border border-green-700/50 rounded text-sm">
-            <p className="text-green-400 font-semibold">✅ {message}</p>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 text-green-400" />
+              <p className="text-green-400 font-semibold">{message}</p>
+            </div>
           </div>
         )}
 
         {status === 'error' && (
           <div className="p-3 bg-red-900/20 border border-red-700/50 rounded text-sm">
-            <p className="text-red-400 font-semibold">❌ {message}</p>
+            <div className="flex items-center gap-2">
+              <AlertCircle className="w-5 h-5 text-red-400" />
+              <p className="text-red-400 font-semibold">{message}</p>
+            </div>
           </div>
         )}
 
@@ -118,7 +128,7 @@ export default function BidForm({ taskId, taskTitle, bountyUsd, onBidSubmitted }
           disabled={!isConnected || loading}
           className="btn-primary w-full"
         >
-          {loading ? '⏳ Submitting Bid...' : '📤 Submit Bid'}
+          {loading ? 'Submitting Bid...' : 'Submit Bid'}
         </button>
 
         {!isConnected && (

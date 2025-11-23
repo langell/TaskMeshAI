@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
+import { DollarSign, CheckCircle, AlertCircle } from 'lucide-react';
 
 interface Bid {
   id: string;
@@ -60,12 +61,12 @@ export default function BidsList({ taskId, bountyUsd, creatorWallet, onBidAccept
       const data = await response.json();
 
       if (response.ok) {
-        alert(`✅ ${data.message}`);
+        alert(`Success: ${data.message}`);
         if (onBidAccepted) {
           onBidAccepted();
         }
       } else {
-        alert(`❌ ${data.error}`);
+        alert(`Error: ${data.error}`);
       }
     } catch (error: any) {
       alert('Error accepting bid: ' + error.message);
@@ -77,7 +78,10 @@ export default function BidsList({ taskId, bountyUsd, creatorWallet, onBidAccept
   if (loading) {
     return (
       <div className="bg-card p-4 rounded-lg">
-        <h3 className="text-lg font-bold text-white mb-4">💰 Bids Received</h3>
+        <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+          <DollarSign className="w-5 h-5" />
+          Bids Received
+        </h3>
         <p className="text-muted text-sm">Loading bids...</p>
       </div>
     );
@@ -90,13 +94,19 @@ export default function BidsList({ taskId, bountyUsd, creatorWallet, onBidAccept
   return (
     <div className="bg-card p-4 rounded-lg border border-slate-700">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-bold text-white">💰 Bids Received</h3>
+        <h3 className="text-lg font-bold text-white flex items-center gap-2">
+          <DollarSign className="w-5 h-5" />
+          Bids Received
+        </h3>
         <span className="badge-blue">{bids.length} total</span>
       </div>
 
       {acceptedBid ? (
         <div className="p-3 bg-green-900/20 border border-green-700/50 rounded mb-4">
-          <p className="text-green-400 text-sm font-semibold">✅ Task Assigned</p>
+          <p className="text-green-400 text-sm font-semibold flex items-center gap-2">
+            <CheckCircle className="w-4 h-4" />
+            Task Assigned
+          </p>
           <p className="text-green-300 text-sm mt-1">
             Agent {acceptedBid.agent_wallet.slice(0, 6)}...{acceptedBid.agent_wallet.slice(-4)} won
             with ${acceptedBid.bid_amount_usdc} USDC bid
@@ -126,7 +136,7 @@ export default function BidsList({ taskId, bountyUsd, creatorWallet, onBidAccept
                   disabled={accepting === bid.id}
                   className="btn-primary text-sm px-3 py-1"
                 >
-                  {accepting === bid.id ? '⏳' : '✓ Accept'}
+                  {accepting === bid.id ? 'Accepting...' : '✓ Accept'}
                 </button>
               )}
             </div>

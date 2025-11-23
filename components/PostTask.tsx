@@ -5,6 +5,7 @@ import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { injected } from 'wagmi/connectors';
 import { useWriteContract, useSwitchChain } from 'wagmi';
 import { parseUnits } from 'viem';
+import { CheckCircle, FileText, Lightbulb, Send } from 'lucide-react';
 
 // USDC contract on Base (8453)
 const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b1566469C18';
@@ -99,7 +100,7 @@ export default function PostTask() {
 
             if (error) throw error;
 
-            alert('✅ Task posted! Agents can now bid on it.');
+            alert('Task posted! Agents can now bid on it.');
             setTitle('');
             setDesc('');
             setBounty('0.30');
@@ -122,7 +123,7 @@ export default function PostTask() {
   return (
     <div className="bg-card p-6 rounded-lg">
       <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-        <span>📝</span>
+        <FileText className="w-5 h-5" />
         Post a New Task
       </h2>
 
@@ -199,14 +200,18 @@ export default function PostTask() {
             />
             <span className="text-muted font-semibold">USDC</span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
-            💡 You&apos;ll transfer {bounty} USDC to the treasury when posting
+          <p className="text-xs text-slate-400 mt-1 flex items-center gap-2">
+            <Lightbulb className="w-4 h-4" />
+            You'll transfer {bounty} USDC to the treasury when posting
           </p>
         </div>
 
         {paymentTx && (
           <div className="p-3 bg-green-900/20 border border-green-700/50 rounded text-sm">
-            <p className="text-green-400 font-semibold">✅ Payment submitted!</p>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 text-green-400" />
+              <p className="text-green-400 font-semibold">Payment submitted!</p>
+            </div>
             <p className="text-green-300 font-mono text-xs mt-1 break-all">{paymentTx}</p>
           </div>
         )}
@@ -216,7 +221,7 @@ export default function PostTask() {
           disabled={!isConnected || loading || chainId !== 8453}
           className="btn-primary w-full mt-6"
         >
-          {loading ? '⏳ Posting...' : '🚀 Post Task & Pay'}
+          {loading ? 'Posting...' : 'Post Task & Pay'}
         </button>
       </div>
     </div>

@@ -1,6 +1,7 @@
 'use client';
 import { supabase } from '@/lib/supabase';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { CheckCircle2, XCircle, Circle, CircleDot, Clipboard, Target } from 'lucide-react';
 
 const statusColors: Record<string, string> = {
   open: 'badge-blue',
@@ -9,11 +10,11 @@ const statusColors: Record<string, string> = {
   cancelled: 'badge-red',
 };
 
-const statusIcons: Record<string, string> = {
-  open: '🔵',
-  in_progress: '🟡',
-  completed: '✅',
-  cancelled: '❌',
+const statusIcons: Record<string, React.ComponentType<any>> = {
+  open: Circle,
+  in_progress: CircleDot,
+  completed: CheckCircle2,
+  cancelled: XCircle,
 };
 
 export default function TaskList() {
@@ -30,13 +31,13 @@ export default function TaskList() {
   return (
     <div className="bg-card p-6 rounded-lg">
       <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-        <span>📋</span>
+        <Clipboard className="w-5 h-5" />
         Open Tasks
       </h2>
 
       {tasks.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-4xl mb-2">🎯</p>
+          <Target className="w-16 h-16 mx-auto mb-2 text-slate-500" />
           <p className="text-muted">No tasks yet — be the first to post one!</p>
         </div>
       ) : (
@@ -51,8 +52,9 @@ export default function TaskList() {
                   <h3 className="text-white font-semibold mb-1">{t.title}</h3>
                   <p className="text-sm text-muted line-clamp-2">{t.description}</p>
                 </div>
-                <span className={`badge ${statusColors[t.status] || 'badge-blue'}`}>
-                  {statusIcons[t.status]} {t.status.replace('_', ' ')}
+                <span className={`badge ${statusColors[t.status] || 'badge-blue'} flex items-center gap-2`}>
+                  {statusIcons[t.status] && React.createElement(statusIcons[t.status], { className: 'w-4 h-4' })}
+                  {t.status.replace('_', ' ')}
                 </span>
               </div>
 
