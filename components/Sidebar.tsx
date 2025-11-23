@@ -1,5 +1,5 @@
 'use client';
-import { Zap, LayoutDashboard, FileText, Bot, Settings, HelpCircle } from 'lucide-react';
+import { Zap, LayoutDashboard, FileText, Bot, Settings, Wallet } from 'lucide-react';
 
 export default function Sidebar() {
   return (
@@ -50,7 +50,7 @@ export default function Sidebar() {
             </li>
             <li>
               <a href="#" className="flex items-center gap-3 px-3 py-2 rounded text-muted hover:text-white hover:bg-slate-800 transition">
-                <span className="text-lg">💳</span>
+                <Wallet className="w-5 h-5" />
                 <span>Wallet</span>
               </a>
             </li>
