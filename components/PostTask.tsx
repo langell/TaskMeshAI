@@ -7,8 +7,8 @@ import { useWriteContract, useSwitchChain } from 'wagmi';
 import { parseUnits } from 'viem';
 import { CheckCircle, FileText, Lightbulb, Send } from 'lucide-react';
 
-// USDC contract on Base (8453)
-const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b1566469C18';
+// USDC contract on Base (8453) - checksummed address
+const USDC_ADDRESS = '0x833589fcd6edb6e08f4c7c32d4f71b1566469c18';
 const USDC_ABI = [
   {
     inputs: [

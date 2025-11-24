@@ -12,10 +12,12 @@
   },
   "dependencies": {
     "@coinbase/x402": "^0.7.1",
+    "@react-native-async-storage/async-storage": "^2.2.0",
     "@supabase/supabase-js": "^2.80.0",
     "@tanstack/react-query": "^5",
     "lucide-react": "^0.554.0",
     "next": "14.2.32",
+    "pino-pretty": "^13.1.2",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "viem": "^2.21.27",
