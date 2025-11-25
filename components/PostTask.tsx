@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { useState, useEffect } from 'react';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { injected } from 'wagmi/connectors';
-import { useWriteContract, useSwitchChain } from 'wagmi';
+import { useWriteContract, useSwitchChain, useWaitForTransactionReceipt } from 'wagmi';
 import { parseUnits } from 'viem';
 import { CheckCircle, FileText, Lightbulb, Send } from 'lucide-react';
 
@@ -28,7 +28,8 @@ export default function PostTask() {
   const [desc, setDesc] = useState('');
   const [bounty, setBounty] = useState('0.30');
   const [loading, setLoading] = useState(false);
-  const [paymentTx, setPaymentTx] = useState<string | null>(null);
+  const [paymentTx, setPaymentTx] = useState<`0x${string}` | null>(null);
+  const [pendingTask, setPendingTask] = useState<any>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -38,7 +39,51 @@ export default function PostTask() {
   const { connect } = useConnect();
   const { disconnect } = useDisconnect();
   const { switchChain } = useSwitchChain();
-  const { writeContract } = useWriteContract();
+  const { writeContract, isPending } = useWriteContract();
+  
+  // Watch for transaction receipt to know when it's confirmed
+  const { data: receipt, status: txStatus } = useWaitForTransactionReceipt({
+    hash: paymentTx,
+  });
+
+  // Handle transaction confirmation
+  useEffect(() => {
+    if (receipt && txStatus === 'success' && paymentTx && pendingTask) {
+      const submitTaskToDb = async () => {
+        try {
+          // Create task in Supabase after payment is confirmed
+          const { data, error } = await supabase
+            .from('tasks')
+            .insert({
+              title: pendingTask.title,
+              description: pendingTask.desc,
+              bounty_usd: pendingTask.bountyAmount,
+              status: 'open',
+              creator_wallet: address,
+              payment_status: 'paid',
+              x402_invoice_id: paymentTx,
+            })
+            .select();
+
+          if (error) throw error;
+
+          alert('Task posted! Agents can now bid on it.');
+          setTitle('');
+          setDesc('');
+          setBounty('0.30');
+          setPaymentTx(null);
+          setPendingTask(null);
+          setLoading(false);
+        } catch (error: any) {
+          console.error('Error creating task:', error);
+          alert('Failed to create task: ' + error.message);
+          setLoading(false);
+        }
+      };
+      
+      submitTaskToDb();
+    }
+  }, [receipt, txStatus, paymentTx, pendingTask, address]);
 
   if (!mounted) {
     return (
@@ -88,52 +133,26 @@ export default function PostTask() {
         token: USDC_ADDRESS,
       });
 
-      // Write USDC transfer
-      writeContract(
-        {
-          address: USDC_ADDRESS,
-          abi: USDC_ABI,
-          functionName: 'transfer',
-          args: [treasuryWallet as `0x${string}`, amount],
-        },
-        {
-          onSuccess: async (txHash) => {
-            console.log('Payment sent:', txHash);
-            setPaymentTx(txHash);
+      // Store pending task data
+      setPendingTask({ title, desc, bountyAmount });
 
-            // Step 2: Create task in Supabase after payment is submitted
-            const { data, error } = await supabase
-              .from('tasks')
-              .insert({
-                title,
-                description: desc,
-                bounty_usd: bountyAmount,
-                status: 'open',
-                creator_wallet: address,
-                payment_status: 'paid',
-                x402_invoice_id: txHash,
-              })
-              .select();
+      // Write USDC transfer - this triggers the wallet and returns a hash
+      const hash = await writeContract({
+        address: USDC_ADDRESS,
+        abi: USDC_ABI,
+        functionName: 'transfer',
+        args: [treasuryWallet as `0x${string}`, amount],
+      });
 
-            if (error) throw error;
-
-            alert('Task posted! Agents can now bid on it.');
-            setTitle('');
-            setDesc('');
-            setBounty('0.30');
-            setPaymentTx(null);
-          },
-          onError: (error) => {
-            console.error('Payment failed:', error);
-            alert('Payment failed: ' + (error as any).message);
-          },
-        }
-      );
+      console.log('Transaction hash:', hash);
+      setPaymentTx(hash);
     } catch (error: any) {
       console.error('Error posting task:', error);
-      alert('Error: ' + error.message);
-    } finally {
+      if (error.message && !error.message.includes('User rejected')) {
+        alert('Error: ' + error.message);
+      }
       setLoading(false);
+      setPendingTask(null);
     }
   };
 
@@ -224,21 +243,29 @@ export default function PostTask() {
         </div>
 
         {paymentTx && (
-          <div className="p-3 bg-green-900/20 border border-green-700/50 rounded text-sm">
+          <div className={`p-3 rounded text-sm ${
+            txStatus === 'success' 
+              ? 'bg-green-900/20 border border-green-700/50' 
+              : 'bg-blue-900/20 border border-blue-700/50'
+          }`}>
             <div className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-400" />
-              <p className="text-green-400 font-semibold">Payment submitted!</p>
+              <CheckCircle className={`w-5 h-5 ${txStatus === 'success' ? 'text-green-400' : 'text-blue-400'}`} />
+              <p className={`font-semibold ${txStatus === 'success' ? 'text-green-400' : 'text-blue-400'}`}>
+                {txStatus === 'success' ? 'Payment confirmed!' : 'Payment submitted...'}
+              </p>
             </div>
-            <p className="text-green-300 font-mono text-xs mt-1 break-all">{paymentTx}</p>
+            <p className={`font-mono text-xs mt-1 break-all ${txStatus === 'success' ? 'text-green-300' : 'text-blue-300'}`}>
+              {paymentTx}
+            </p>
           </div>
         )}
 
         <button
           onClick={post}
-          disabled={!isConnected || loading || chainId !== 8453}
+          disabled={!isConnected || loading || isPending || chainId !== 8453 || paymentTx}
           className="btn-primary w-full mt-6"
         >
-          {loading ? 'Posting...' : 'Post Task & Pay'}
+          {loading || isPending ? 'Posting...' : paymentTx ? 'Waiting for confirmation...' : 'Post Task & Pay'}
         </button>
       </div>
     </div>
