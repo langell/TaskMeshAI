@@ -28,16 +28,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-      
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          cache: 'pnpm'
+      
+      - name: Install pnpm
+        run: npm install -g pnpm@8
       
       - name: Install dependencies
         run: pnpm install
@@ -50,16 +47,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-      
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          cache: 'pnpm'
+      
+      - name: Install pnpm
+        run: npm install -g pnpm@8
       
       - name: Install dependencies
         run: pnpm install
