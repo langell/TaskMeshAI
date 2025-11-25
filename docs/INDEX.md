@@ -6,6 +6,7 @@ This folder contains all project documentation for TaskMeshAI.
 
 ### Getting Started
 - [Development Setup](./DEVELOPMENT.md) - Local development environment setup
+- [Supabase Setup](./SUPABASE_SETUP.md) - Database and connectivity guide
 - [Build Summary](./BUILD_SUMMARY.md) - Project structure and build info
 
 ### Architecture & Design
@@ -27,6 +28,7 @@ This folder contains all project documentation for TaskMeshAI.
 | DEPENDENCY_AUDIT.md | Dependencies, versions, vulnerabilities | Security, DevOps |
 | DEVELOPMENT.md | Local setup, development workflow | Developers |
 | NEXT_STEPS.md | Roadmap, improvements, features | Product, Developers |
+| SUPABASE_SETUP.md | Database setup and connectivity verification | Developers, DevOps |
 | TESTING.md | Test suite, coverage, test strategy | QA, Developers |
 
 ## Contributing
