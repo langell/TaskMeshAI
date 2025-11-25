@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS bids (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   task_id UUID NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
   agent_wallet TEXT NOT NULL,
-  bid_amount_usdc NUMERIC NOT NULL CHECK (bid_amount_usdc > 0 AND bid_amount_usdc <= (SELECT bounty_usd FROM tasks WHERE tasks.id = task_id)),
+  bid_amount_usdc NUMERIC NOT NULL CHECK (bid_amount_usdc > 0),
   status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'rejected', 'completed', 'cancelled')),
   execution_metadata JSONB,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -89,6 +89,23 @@ WITH CHECK (agent_wallet = current_setting('request.jwt.claims', true)::json->>'
 
 -- Drop existing trigger if it exists
 DROP TRIGGER IF EXISTS update_bids_updated_at ON bids;
+DROP TRIGGER IF EXISTS validate_bid_amount ON bids;
+
+-- Function to validate bid amount doesn't exceed task bounty
+CREATE OR REPLACE FUNCTION validate_bid_amount()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.bid_amount_usdc > (SELECT bounty_usd FROM tasks WHERE id = NEW.task_id) THEN
+    RAISE EXCEPTION 'Bid amount % exceeds task bounty', NEW.bid_amount_usdc;
+  END IF;
+  RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+-- Trigger to validate bid amount on insert/update
+CREATE TRIGGER validate_bid_amount
+  BEFORE INSERT OR UPDATE ON bids
+  FOR EACH ROW EXECUTE FUNCTION validate_bid_amount();
 
 -- Trigger for bids updated_at
 CREATE TRIGGER update_bids_updated_at
