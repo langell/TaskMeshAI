@@ -8,7 +8,8 @@
     "start": "next start",
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watch",
-    "test:coverage": "NODE_ENV=test jest --coverage"
+    "test:coverage": "NODE_ENV=test jest --coverage",
+    "verify:supabase": "tsx scripts/verify-supabase.ts"
   },
   "dependencies": {
     "@coinbase/x402": "^0.7.1",
