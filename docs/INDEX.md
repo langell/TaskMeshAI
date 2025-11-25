@@ -33,6 +33,8 @@ This folder contains all project documentation for TaskMeshAI.
 | SUPABASE_SETUP.md | Database setup and connectivity verification | Developers, DevOps |
 | TESTING.md | Test suite, coverage, test strategy | QA, Developers |
 | WALLET_GUIDE.md | Wallet integration architecture and usage | Developers |
+| WALLET_IMPLEMENTATION.md | Code walkthrough and implementation patterns | Developers |
+| WALLET_QUICK_REFERENCE.md | Quick lookup for common wallet tasks | Developers |
 | WALLET_TESTING_CHECKLIST.md | Practical wallet testing procedures | QA, Developers |
 
 ## Contributing
