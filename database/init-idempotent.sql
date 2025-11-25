@@ -1,7 +1,7 @@
--- Database setup for TaskMesh MVP
--- Run this in Supabase SQL Editor or via CLI
+-- Database setup for TaskMesh MVP (idempotent version)
+-- Safe to run multiple times - handles existing objects
 
--- Create tasks table
+-- Create tasks table if it doesn't exist
 CREATE TABLE IF NOT EXISTS tasks (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title TEXT NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS tasks (
 -- Enable Row Level Security
 ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
 
--- Drop existing policies if they exist (safe to run multiple times)
+-- Drop existing policies if they exist (to avoid conflicts)
 DROP POLICY IF EXISTS "Anyone can view tasks" ON tasks;
 DROP POLICY IF EXISTS "Anyone can post tasks" ON tasks;
 DROP POLICY IF EXISTS "Creator or agent can update tasks" ON tasks;
@@ -39,6 +39,9 @@ USING (
   agent_wallet = current_setting('request.jwt.claims', true)::json->>'wallet'
 );
 
+-- Drop and recreate function (safe)
+DROP FUNCTION IF EXISTS update_updated_at_column() CASCADE;
+
 -- Function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
@@ -56,23 +59,23 @@ CREATE TRIGGER update_tasks_updated_at
   BEFORE UPDATE ON tasks
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
--- Create bids table for agent bidding system
+-- Create bids table if it doesn't exist
 CREATE TABLE IF NOT EXISTS bids (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   task_id UUID NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
   agent_wallet TEXT NOT NULL,
   bid_amount_usdc NUMERIC NOT NULL CHECK (bid_amount_usdc > 0 AND bid_amount_usdc <= (SELECT bounty_usd FROM tasks WHERE tasks.id = task_id)),
   status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'rejected', 'completed', 'cancelled')),
-  execution_metadata JSONB, -- Store agent-specific execution params
+  execution_metadata JSONB,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  UNIQUE(task_id, agent_wallet) -- Only one bid per agent per task
+  UNIQUE(task_id, agent_wallet)
 );
 
 -- Enable RLS for bids
 ALTER TABLE bids ENABLE ROW LEVEL SECURITY;
 
--- Drop existing policies if they exist (safe to run multiple times)
+-- Drop existing bids policies if they exist
 DROP POLICY IF EXISTS "Anyone can view bids" ON bids;
 DROP POLICY IF EXISTS "Anyone can create bids" ON bids;
 DROP POLICY IF EXISTS "Agent can update own bid" ON bids;
