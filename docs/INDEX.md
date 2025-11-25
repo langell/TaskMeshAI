@@ -14,6 +14,10 @@ This folder contains all project documentation for TaskMeshAI.
 - [Wallet Testing Checklist](./WALLET_TESTING_CHECKLIST.md) - Step-by-step wallet testing without real tokens
 - [Testing Guide](./TESTING.md) - Unit tests, coverage, and test strategy
 
+### Code Review & Quality
+- [Code Review Setup](./CODE_REVIEW_SETUP.md) - Automated code review guide (GitHub Actions, ESLint, etc.)
+- [Code Review Implementation Checklist](./CODE_REVIEW_IMPLEMENTATION_CHECKLIST.md) - Step-by-step implementation guide
+
 ### Architecture & Design
 - [Architecture](./ARCHITECTURE.md) - System design and component overview
 - [Next Steps](./NEXT_STEPS.md) - Future improvements and roadmap
@@ -27,6 +31,8 @@ This folder contains all project documentation for TaskMeshAI.
 |----------|---------|----------|
 | ARCHITECTURE.md | System design, components, data flow | Developers, Architects |
 | BUILD_SUMMARY.md | Build process, deployment, environment setup | DevOps, Developers |
+| CODE_REVIEW_IMPLEMENTATION_CHECKLIST.md | Step-by-step code review setup | Developers, DevOps |
+| CODE_REVIEW_SETUP.md | Automated code review options and patterns | Developers, DevOps |
 | DEPENDENCY_AUDIT.md | Dependencies, versions, vulnerabilities | Security, DevOps |
 | DEVELOPMENT.md | Local setup, development workflow | Developers |
 | NEXT_STEPS.md | Roadmap, improvements, features | Product, Developers |
