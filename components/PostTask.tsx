@@ -28,7 +28,7 @@ export default function PostTask() {
   const [desc, setDesc] = useState('');
   const [bounty, setBounty] = useState('0.30');
   const [loading, setLoading] = useState(false);
-  const [paymentTx, setPaymentTx] = useState<`0x${string}` | null>(null);
+  const [paymentTx, setPaymentTx] = useState<`0x${string}` | undefined>(undefined);
   const [pendingTask, setPendingTask] = useState<any>(null);
 
   useEffect(() => {
@@ -39,12 +39,19 @@ export default function PostTask() {
   const { connect } = useConnect();
   const { disconnect } = useDisconnect();
   const { switchChain } = useSwitchChain();
-  const { writeContract, isPending } = useWriteContract();
+  const { writeContract, isPending, data: txHash } = useWriteContract();
   
   // Watch for transaction receipt to know when it's confirmed
   const { data: receipt, status: txStatus } = useWaitForTransactionReceipt({
-    hash: paymentTx,
+    hash: paymentTx || undefined,
   });
+
+  // When writeContract succeeds, update paymentTx
+  useEffect(() => {
+    if (txHash) {
+      setPaymentTx(txHash);
+    }
+  }, [txHash]);
 
   // Handle transaction confirmation
   useEffect(() => {
@@ -71,7 +78,7 @@ export default function PostTask() {
           setTitle('');
           setDesc('');
           setBounty('0.30');
-          setPaymentTx(null);
+          setPaymentTx(undefined);
           setPendingTask(null);
           setLoading(false);
         } catch (error: any) {
@@ -136,16 +143,14 @@ export default function PostTask() {
       // Store pending task data
       setPendingTask({ title, desc, bountyAmount });
 
-      // Write USDC transfer - this triggers the wallet and returns a hash
-      const hash = await writeContract({
+      // Write USDC transfer - writeContract doesn't return a value
+      // The result will be available in the txHash state and via useWaitForTransactionReceipt
+      writeContract({
         address: USDC_ADDRESS,
         abi: USDC_ABI,
         functionName: 'transfer',
         args: [treasuryWallet as `0x${string}`, amount],
       });
-
-      console.log('Transaction hash:', hash);
-      setPaymentTx(hash);
     } catch (error: any) {
       console.error('Error posting task:', error);
       if (error.message && !error.message.includes('User rejected')) {
@@ -262,7 +267,7 @@ export default function PostTask() {
 
         <button
           onClick={post}
-          disabled={!isConnected || loading || isPending || chainId !== 8453 || paymentTx}
+          disabled={!isConnected || loading || isPending || chainId !== 8453 || !!paymentTx}
           className="btn-primary w-full mt-6"
         >
           {loading || isPending ? 'Posting...' : paymentTx ? 'Waiting for confirmation...' : 'Post Task & Pay'}
