@@ -7,14 +7,16 @@ This folder contains all project documentation for TaskMeshAI.
 ### Getting Started
 - [Development Setup](./DEVELOPMENT.md) - Local development environment setup
 - [Supabase Setup](./SUPABASE_SETUP.md) - Database and connectivity guide
+- [Wallet Interface Guide](./WALLET_GUIDE.md) - Complete wallet integration documentation
 - [Build Summary](./BUILD_SUMMARY.md) - Project structure and build info
+
+### Testing & QA
+- [Wallet Testing Checklist](./WALLET_TESTING_CHECKLIST.md) - Step-by-step wallet testing without real tokens
+- [Testing Guide](./TESTING.md) - Unit tests, coverage, and test strategy
 
 ### Architecture & Design
 - [Architecture](./ARCHITECTURE.md) - System design and component overview
 - [Next Steps](./NEXT_STEPS.md) - Future improvements and roadmap
-
-### Testing
-- [Testing Guide](./TESTING.md) - Unit tests, coverage, and test strategy
 
 ### Quality & Dependencies
 - [Dependency Audit](./DEPENDENCY_AUDIT.md) - Dependencies and security audit
@@ -30,6 +32,8 @@ This folder contains all project documentation for TaskMeshAI.
 | NEXT_STEPS.md | Roadmap, improvements, features | Product, Developers |
 | SUPABASE_SETUP.md | Database setup and connectivity verification | Developers, DevOps |
 | TESTING.md | Test suite, coverage, test strategy | QA, Developers |
+| WALLET_GUIDE.md | Wallet integration architecture and usage | Developers |
+| WALLET_TESTING_CHECKLIST.md | Practical wallet testing procedures | QA, Developers |
 
 ## Contributing
 
