@@ -112,9 +112,10 @@ export default function PostTask() {
       return;
     }
 
-    // Check if on Base chain (8453)
-    if (chainId !== 8453) {
-      alert('Please switch to Base network');
+    // Check if on Base chain (8453) or Ganache localhost (1337)
+    const isValidChain = chainId === 8453 || chainId === 1337;
+    if (!isValidChain) {
+      alert('Please switch to Base network or Ganache localhost');
       switchChain({ chainId: 8453 });
       return;
     }
@@ -181,7 +182,7 @@ export default function PostTask() {
         <div className="mb-6 p-3 bg-slate-800 rounded text-sm">
           <p className="text-muted mb-1">Connected Wallet:</p>
           <p className="text-green-400 font-mono font-semibold">{address?.slice(0, 6)}...{address?.slice(-4)}</p>
-          {chainId !== 8453 && (
+          {chainId !== 8453 && chainId !== 1337 && (
             <button
               onClick={() => switchChain({ chainId: 8453 })}
               className="text-xs text-yellow-400 hover:text-yellow-300 mt-2 block"
@@ -208,7 +209,7 @@ export default function PostTask() {
             className="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition"
             value={title}
             onChange={e => setTitle(e.target.value)}
-            disabled={!isConnected || chainId !== 8453}
+            disabled={!isConnected || (chainId !== 8453 && chainId !== 1337)}
           />
         </div>
 
@@ -222,7 +223,7 @@ export default function PostTask() {
             rows={4}
             value={desc}
             onChange={e => setDesc(e.target.value)}
-            disabled={!isConnected || chainId !== 8453}
+            disabled={!isConnected || (chainId !== 8453 && chainId !== 1337)}
           />
         </div>
 
@@ -239,7 +240,7 @@ export default function PostTask() {
               className="flex-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition"
               value={bounty}
               onChange={e => setBounty(e.target.value)}
-              disabled={!isConnected || chainId !== 8453}
+              disabled={!isConnected || (chainId !== 8453 && chainId !== 1337)}
             />
             <span className="text-muted font-semibold">USDC</span>
           </div>
@@ -269,7 +270,7 @@ export default function PostTask() {
 
         <button
           onClick={post}
-          disabled={!isConnected || loading || isPending || chainId !== 8453 || !!paymentTx}
+          disabled={!isConnected || loading || isPending || (chainId !== 8453 && chainId !== 1337) || !!paymentTx}
           className="btn-primary w-full mt-6"
         >
           {loading || isPending ? 'Posting...' : paymentTx ? 'Waiting for confirmation...' : 'Post Task & Pay'}

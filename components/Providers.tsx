@@ -2,14 +2,15 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider, createConfig, http } from 'wagmi';
-import { base } from 'wagmi/chains';
+import { base, localhost } from 'wagmi/chains';
 import { injected } from 'wagmi/connectors';
 
 const config = createConfig({
-  chains: [base],
+  chains: [base, localhost],
   connectors: [injected()],
   transports: {
     [base.id]: http(),
+    [localhost.id]: http('http://localhost:8545'),
   },
 });
 
