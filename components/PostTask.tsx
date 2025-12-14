@@ -7,8 +7,10 @@ import { useWriteContract, useSwitchChain, useWaitForTransactionReceipt } from '
 import { parseUnits } from 'viem';
 import { CheckCircle, FileText, Lightbulb, Send } from 'lucide-react';
 
-// USDC contract on Base (8453) - checksummed address
-const USDC_ADDRESS = '0x833589fcd6edb6e08f4c7c32d4f71b1566469c18';
+// USDC contract address - comes from environment variable
+// For Base mainnet: 0x833589fcd6edb6e08f4c7c32d4f71b1566469c18
+// For local testing: set NEXT_PUBLIC_USDC_ADDRESS in .env.local
+const USDC_ADDRESS = (process.env.NEXT_PUBLIC_USDC_ADDRESS || '0x833589fcd6edb6e08f4c7c32d4f71b1566469c18') as `0x${string}`;
 const USDC_ABI = [
   {
     inputs: [
