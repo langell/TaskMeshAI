@@ -213,7 +213,7 @@ export default function PostTask() {
 
         <div>
           <label className="block text-xs font-semibold uppercase tracking-wider text-muted mb-2">
-            Bounty (USDC on Base)
+            Bounty (ETH)
           </label>
           <div className="flex items-center gap-2">
             <input
@@ -226,11 +226,11 @@ export default function PostTask() {
               onChange={e => setBounty(e.target.value)}
               disabled={!isConnected || (chainId !== 8453 && chainId !== 1337 && chainId !== 1)}
             />
-            <span className="text-muted font-semibold">USDC</span>
+            <span className="text-muted font-semibold">ETH</span>
           </div>
           <p className="text-xs text-slate-400 mt-1 flex items-center gap-2">
             <Lightbulb className="w-4 h-4" />
-            You'll transfer {bounty} USDC to the treasury when posting
+            You'll transfer {bounty} ETH to the treasury when posting
           </p>
         </div>
 

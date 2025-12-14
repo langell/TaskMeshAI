@@ -79,13 +79,13 @@ export default function BidForm({ taskId, taskTitle, bountyUsd, onBidSubmitted }
         <div>
           <p className="text-sm text-muted mb-2">Task: {taskTitle}</p>
           <p className="text-sm text-green-400 font-semibold mb-4">
-            Max Bounty: ${bountyUsd} USDC
+            Max Bounty: {bountyUsd} ETH
           </p>
         </div>
 
         <div>
           <label className="block text-xs font-semibold uppercase tracking-wider text-muted mb-2">
-            Your Bid (USDC)
+            Your Bid (ETH)
           </label>
           <div className="flex items-center gap-2">
             <input
@@ -98,10 +98,10 @@ export default function BidForm({ taskId, taskTitle, bountyUsd, onBidSubmitted }
               disabled={!isConnected || loading}
               className="flex-1 bg-slate-800 border border-slate-700 rounded px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition"
             />
-            <span className="text-muted font-semibold">USDC</span>
+            <span className="text-muted font-semibold">ETH</span>
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            You profit: ${(bountyUsd - parseFloat(bidAmount)).toFixed(2)} USDC
+            You profit: {(bountyUsd - parseFloat(bidAmount)).toFixed(2)} ETH
           </p>
         </div>
 

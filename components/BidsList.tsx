@@ -109,7 +109,7 @@ export default function BidsList({ taskId, bountyUsd, creatorWallet, onBidAccept
           </p>
           <p className="text-green-300 text-sm mt-1">
             Agent {acceptedBid.agent_wallet.slice(0, 6)}...{acceptedBid.agent_wallet.slice(-4)} won
-            with ${acceptedBid.bid_amount_usdc} USDC bid
+            with {acceptedBid.bid_amount_usdc} ETH bid
           </p>
         </div>
       ) : null}
