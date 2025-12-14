@@ -3,26 +3,12 @@ import { supabase } from '@/lib/supabase';
 import { useState, useEffect } from 'react';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { injected } from 'wagmi/connectors';
-import { useWriteContract, useSwitchChain, useWaitForTransactionReceipt } from 'wagmi';
-import { parseUnits } from 'viem';
+import { useSwitchChain, useWaitForTransactionReceipt, useSendTransaction } from 'wagmi';
+import { parseEther } from 'viem';
 import { CheckCircle, FileText, Lightbulb, Send } from 'lucide-react';
 
-// USDC contract address - comes from environment variable
-// For Base mainnet: 0x833589fcd6edb6e08f4c7c32d4f71b1566469c18
-// For local testing: set NEXT_PUBLIC_USDC_ADDRESS in .env.local
-const USDC_ADDRESS = (process.env.NEXT_PUBLIC_USDC_ADDRESS || '0x833589fcd6edb6e08f4c7c32d4f71b1566469c18') as `0x${string}`;
-const USDC_ABI = [
-  {
-    inputs: [
-      { internalType: 'address', name: 'to', type: 'address' },
-      { internalType: 'uint256', name: 'amount', type: 'uint256' },
-    ],
-    name: 'transfer',
-    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-] as const;
+// Using native ETH for payments during testing
+// TODO: Switch to USDC after deploying token contract
 
 export default function PostTask() {
   const [mounted, setMounted] = useState(false);
@@ -41,7 +27,7 @@ export default function PostTask() {
   const { connect } = useConnect();
   const { disconnect } = useDisconnect();
   const { switchChain } = useSwitchChain();
-  const { writeContract, isPending, data: txHash } = useWriteContract();
+  const { sendTransaction, isPending, data: txHash } = useSendTransaction();
   
   // Watch for transaction receipt to know when it's confirmed
   const { data: receipt, status: txStatus } = useWaitForTransactionReceipt({
@@ -133,26 +119,23 @@ export default function PostTask() {
 
     setLoading(true);
     try {
-      // Step 1: Send USDC payment to treasury
+      // Step 1: Send ETH payment to treasury (native token)
       const treasuryWallet = process.env.NEXT_PUBLIC_TREASURY_WALLET || address;
-      const amount = parseUnits(bounty, 6); // USDC has 6 decimals
+      const amount = parseEther(bounty); // Parse as ETH
 
       console.log('Sending payment:', {
         amount: bounty,
         to: treasuryWallet,
-        token: USDC_ADDRESS,
+        token: 'ETH (native)',
       });
 
       // Store pending task data
       setPendingTask({ title, desc, bountyAmount });
 
-      // Write USDC transfer - writeContract doesn't return a value
-      // The result will be available in the txHash state and via useWaitForTransactionReceipt
-      writeContract({
-        address: USDC_ADDRESS,
-        abi: USDC_ABI,
-        functionName: 'transfer',
-        args: [treasuryWallet as `0x${string}`, amount],
+      // Send native ETH transaction
+      sendTransaction({
+        to: treasuryWallet as `0x${string}`,
+        value: amount,
       });
     } catch (error: any) {
       console.error('Error posting task:', error);
